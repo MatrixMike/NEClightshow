@@ -1,0 +1,199 @@
+##############################################################################
+#                                                                            #
+# IAR 78000 C-Compiler Lite V3.33A/WIN                                       #
+#                                                                            #
+#       Compile time  =  11/Jun/2018  11:47:32                               #
+#       Target option =  78K/0  - 7801x and above / 780xxx                   #
+#       Memory model  =  standard                                            #
+#       Source file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\source\interrupt.c#
+#       List file     =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\interrupt.lst#
+#       Object file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\interrupt.r26#
+#       Command line  =  -v1 -ms                                             #
+#                        -OF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -e -K -gA -z3 -RCODE -r0r                           #
+#                        -LF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -q -T -t8                                           #
+#                        -IC:\Program Files\IAR Systems\ew23\78000\inc\      #
+#                        -IF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\inc\ #
+#                        F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\source\interrupt.c #
+#                                                                            #
+#          Copyright 2001 NEC Electronics, IAR Systems. All rights reserved. #
+##############################################################################
+
+   \                     vTimer0:
+      1          /*============================================================================
+      2          ** PROJECT      = 78K0 Demonstration Board (Lightshow)
+      3          ** MODULE       = interrupt.c
+      4          ** SHORT DESC.  = -
+      5          ** DEVICE       = uPD78F0066
+      6          ** VERSION      = 1.0
+      7          ** DATE         = 02.01.2000
+      8          ** LAST CHANGE  = -
+      9          ** ===========================================================================
+     10          ** Description:  Interrupt service routines for Lightshow
+     11          **
+     12          ** ===========================================================================
+     13          ** Environment:  Device:         uPD78F0066                                    
+     14          **               Assembler:      A78000         Version 3.30A                     
+     15          **               C-Compiler:     ICC78000       Version 3.30A
+     16          **               Linker:         XLINK          Version 4.51O
+     17          **               Simulator:      SM78K0         Version 2.10 
+     18          ** ===========================================================================
+     19          ** By:          NEC Electronics (Europe) GmbH
+     20          **              Oberrather Strasse 4
+     21          **              D-40472 Duesseldorf
+     22          **
+     23          ** ===========================================================================
+     24          Changes:           
+     25          ** ===========================================================================
+     26          */
+     27          
+     28          //-----------------------------------------------------------------------------
+     29          // Defines
+     30          //-----------------------------------------------------------------------------
+     31          
+     32          //-----------------------------------------------------------------------------
+     33          // Include files
+     34          //-----------------------------------------------------------------------------
+     35          #include <in78000.h>
+     36          #include "df0066.h"             
+     37          #include "defines.h"
+     38          
+     39          //-----------------------------------------------------------------------------
+     40          // Global variables
+     41          //-----------------------------------------------------------------------------
+     42          extern bit           bTimer51Flag;     // Status Flag Timer51
+     43          extern bit           bKey1Flag;        // Status Flag Key1
+     44          extern bit           bKey2Flag;        // Status Flag Key2
+     45          
+     46          extern saddr unsigned char ucLEDs;
+     47          static saddr unsigned char ucOldLEDs; 
+     48          /* ============================================================================
+     49          **  Module name: vTimer0
+     50          **
+     51          **  Description:
+     52          **               This module is the Interrupt service routine for Timer0
+     53          **
+     54          **  Operation:
+     55          **               
+     56          ** ============================================================================
+     57          */
+     58          interrupt [INTTM00_vect] void vTimer0(void)
+   \   0000                          ;vTimer0
+   \   0000   B1                     PUSH    RP0
+     59          {
+     60              static saddr unsigned char ucFlag;
+     61              static saddr unsigned char ucOldLEDs; 
+   \   0001   F0..                   MOV     R1, S:?0001
+   \   0003   4E..                   CMP     R1, S:ucLEDs
+   \   0005   BD16                   BNZ     ?0003
+   \                     ?0002:
+     62              if (ucOldLEDs==ucLEDs){
+   \   0007   C8..01                 CMP     S:?0000, #0x1
+   \   000A   BD08                   BNZ     ?0005
+   \                     ?0004:
+     63                  if (ucFlag==0x01){
+   \   000C   11..00                 MOV     S:?0000, #0x0
+     64                    ucFlag=0x00;
+   \   000F   1105FF                 MOV     S:0xFF05, #0xFF                 ; Sfr: P5
+     65                    LED=0xff;                        // all LEDs off
+     66                  }
+   \   0012   FA07                   BR      ?0006
+   \                     ?0005:
+     67                  else{
+   \   0014   11..01                 MOV     S:?0000, #0x1
+     68                    ucFlag=0x01;
+   \   0017   F0..                   MOV     R1, S:ucLEDs
+   \   0019   F205                   MOV     S:0xFF05, R1                    ; Sfr: P5
+   \                     ?0006:
+     69                    LED=ucLEDs;                      // Output LED value 
+     70                  }
+     71              }                  
+   \   001B   FA0B                   BR      ?0007
+   \                     ?0003:
+     72              else{
+   \   001D   F0..                   MOV     R1, S:ucLEDs
+   \   001F   F2..                   MOV     S:?0001, R1
+     73                ucOldLEDs=ucLEDs;                    // save current LED value 
+   \   0021   F0..                   MOV     R1, S:ucLEDs
+   \   0023   F205                   MOV     S:0xFF05, R1                    ; Sfr: P5
+     74                LED=ucLEDs;                          // Output LED value 
+   \   0025   11..01                 MOV     S:?0000, #0x1
+   \                     ?0007:
+     75                ucFlag=0x01;                            
+     76              }
+   \   0028   B0                     POP     RP0
+   \   0029   8F                     RETI
+   \                     vTimer51:
+     77          }
+     78          
+     79          
+     80          
+     81          /* ============================================================================
+     82          **  Module name: vTimer51
+     83          **
+     84          **  Description:
+     85          **               This module is the Interrupt service routine for Timer51
+     86          **
+     87          **  Operation:
+     88          **               -
+     89          ** ============================================================================
+     90          */
+     91          interrupt [INTTM51_vect] void vTimer51(void)
+   \   002A                          ;vTimer51
+     92          {
+   \   002A   ....                   SET1    bTimer51Flag
+     93              bTimer51Flag = 1 ;                  // Set status flag Timer51
+   \   002C   8F                     RETI
+   \                     vKey2:
+     94          }
+     95          
+     96          
+     97          
+     98          /* ============================================================================
+     99          **  Module name: vKey2
+    100          **
+    101          **  Description:
+    102          **               This module is the Interrupt service routine for 
+    103          **               the external interrupt P2 (-> Key2)
+    104          **
+    105          **  Operation:
+    106          **               -
+    107          ** ============================================================================
+    108          */
+    109          interrupt [INTP2_vect] void vKey2(void)
+   \   002D                          ;vKey2
+    110          {
+   \   002D   ....                   SET1    bKey2Flag
+    111              bKey2Flag = 1 ;                    // Set status flag Key2 
+   \   002F   8F                     RETI
+   \                     vKey1:
+    112          }
+    113          
+    114          /* ============================================================================
+    115          **  Module name: vKey1
+    116          **
+    117          **  Description:
+    118          **               This module is the Interrupt service routine for 
+    119          **               the external interrupt P3 (-> Key1)
+    120          **
+    121          **  Operation:
+    122          **               -
+    123          ** ============================================================================
+    124          */
+    125          interrupt [INTP3_vect] void vKey1(void)
+   \   0030                          ;vKey1
+    126          {
+   \   0030   ....                   SET1    bKey1Flag
+    127              bKey1Flag = 1 ;                    // Set status flag Key1
+   \   0032   8F                     RETI
+    128          }
+    129          
+    130          
+
+Errors: none
+Warnings: none
+Code size: 51
+Constant size: 34
+Static variable size: 3
+

@@ -1,0 +1,490 @@
+##############################################################################
+#                                                                            #
+# IAR 78000 C-Compiler Lite V3.33A/WIN                                       #
+#                                                                            #
+#       Compile time  =  11/Jun/2018  11:47:32                               #
+#       Target option =  78K/0  - 7801x and above / 780xxx                   #
+#       Memory model  =  standard                                            #
+#       Source file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\source\sequences.c#
+#       List file     =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\sequences.lst#
+#       Object file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\sequences.r26#
+#       Command line  =  -v1 -ms                                             #
+#                        -OF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -e -K -gA -z3 -RCODE -r0r                           #
+#                        -LF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -q -T -t8                                           #
+#                        -IC:\Program Files\IAR Systems\ew23\78000\inc\      #
+#                        -IF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\inc\ #
+#                        F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\source\sequences.c #
+#                                                                            #
+#          Copyright 2001 NEC Electronics, IAR Systems. All rights reserved. #
+##############################################################################
+
+   \                     vShow1:
+      1          /*============================================================================
+      2          ** PROJECT      = 78K0 Demonstration Board  (Lightshow)
+      3          ** MODULE       = sequences.c
+      4          ** SHORT DESC.  = -
+      5          ** DEVICE       = uPD78F0066
+      6          ** VERSION      = 1.0
+      7          ** DATE         = 02.01.2000
+      8          ** LAST CHANGE  = -
+      9          ** ===========================================================================
+     10          ** Description:  Definition of the sequences
+     11          **
+     12          ** ===========================================================================
+     13          ** Environment:  Device:         uPD78F0066                                    
+     14          **               Assembler:      A78000         Version 3.30A                     
+     15          **               C-Compiler:     ICC78000       Version 3.30A
+     16          **               Linker:         XLINK          Version 4.51O
+     17          **               Simulator:      SM78K0         Version 2.10 
+     18          ** ===========================================================================
+     19          ** By:          NEC Electronics (Europe) GmbH
+     20          **              Oberrather Strasse 4
+     21          **              D-40472 Duesseldorf
+     22          **
+     23          ** ===========================================================================
+     24          Changes:           
+     25          ** ===========================================================================
+     26          */
+     27          /* ============================================================================
+     28          **  Module name: vShow1
+     29          **
+     30          **  Description:
+     31          **               This module defines lightshow number1.
+     32          **
+     33          **  Operation:
+     34          **               -
+     35          ** ============================================================================
+     36          */
+     37          
+     38          //-----------------------------------------------------------------------------
+     39          // Include files
+     40          //-----------------------------------------------------------------------------
+     41          #include <in78000.h>
+     42          #include "DF0066.h"                       
+     43          #include "defines.h"
+     44          
+     45          //-----------------------------------------------------------------------------
+     46          // Global variables
+     47          //-----------------------------------------------------------------------------
+     48          extern bit                 bTimerFlag;          // Status Flag Timer
+     49          extern bit                 bKey1Flag;           // Status Key1
+     50          extern bit                 bKey2Flag;           // Status Key2
+     51          extern saddr unsigned char ucLEDs;              // LED output
+     52          //-----------------------------------------------------------------------------
+     53          // Function prototyps
+     54          //-----------------------------------------------------------------------------
+     55          extern void   vWait50        (unsigned char);   // n *  50ms delay
+     56          
+     57          /* ============================================================================
+     58          **  Module name: vShow1
+     59          **
+     60          **  Description:
+     61          **               This module defines lightshow number1.
+     62          **
+     63          **  Operation:
+     64          **               -
+     65          ** ============================================================================
+     66          */
+     67          void vShow1(void)
+   \   0000                          ;vShow1
+   \   0000   B1                     PUSH    RP0
+     68          {
+     69              unsigned char i;
+   \   0001   11..FF                 MOV     S:ucLEDs, #0xFF
+     70              ucLEDs=0xFF;                       
+   \   0004   A000                   MOV     R0, #0x0
+   \                     ?0001:
+   \   0006   60                     MOV     R1, R0
+   \   0007   4D08                   CMP     R1, #0x8
+   \   0009   9D0E                   BNC     ?0000
+   \                     ?0002:
+     71              for(i=0;i<8;i++){
+   \   000B   F0..                   MOV     R1, S:ucLEDs
+   \   000D   21                     CLR1    CY
+   \   000E   27                     ROLC    R1, 0x1
+   \   000F   F2..                   MOV     S:ucLEDs, R1
+     72                 ucLEDs=(ucLEDs<<1);
+   \   0011   A10A                   MOV     R1, #0xA
+   \   0013   9A....                 CALL    vWait50
+   \   0016   40                     INC     R0
+     73                 vWait50(10);                    // Delay of 500 ms 
+     74              }
+   \   0017   FAED                   BR      ?0001
+   \                     ?0000:
+   \   0019   A000                   MOV     R0, #0x0
+   \                     ?0005:
+   \   001B   60                     MOV     R1, R0
+   \   001C   4D08                   CMP     R1, #0x8
+   \   001E   9D10                   BNC     ?0004
+   \                     ?0006:
+     75              for(i=0;i<8;i++){
+   \   0020   F0..                   MOV     R1, S:ucLEDs
+   \   0022   21                     CLR1    CY
+   \   0023   25                     RORC    R1, 0x1
+   \   0024   0D80                   ADD     R1, #0x80
+   \   0026   F2..                   MOV     S:ucLEDs, R1
+     76                 ucLEDs=(ucLEDs>>1)+0x80;
+   \   0028   A10A                   MOV     R1, #0xA
+   \   002A   9A....                 CALL    vWait50
+   \   002D   40                     INC     R0
+     77                 vWait50(10);                    // Delay of 500 ms 
+     78              }
+   \   002E   FAEB                   BR      ?0005
+   \                     ?0004:
+     79              return;
+   \   0030   B0                     POP     RP0
+   \   0031   AF                     RET
+   \                     vShow2:
+     80          }
+     81          /* ============================================================================
+     82          **  Module name: vShow2
+     83          **
+     84          **  Description:
+     85          **               This module defines lightshow number2.
+     86          **
+     87          **  Operation:
+     88          **               -
+     89          ** ============================================================================
+     90          */
+     91          void vShow2(void)
+   \   0032                          ;vShow2
+   \   0032   B1                     PUSH    RP0
+     92          {
+     93              unsigned char i;
+   \   0033   11..FE                 MOV     S:ucLEDs, #0xFE
+     94              ucLEDs=0xFE;
+   \   0036   A10A                   MOV     R1, #0xA
+   \   0038   9A....                 CALL    vWait50
+     95                 vWait50(10);                    // Delay of 500 ms 
+   \   003B   A000                   MOV     R0, #0x0
+   \                     ?0009:
+   \   003D   60                     MOV     R1, R0
+   \   003E   4D07                   CMP     R1, #0x7
+   \   0040   9D0F                   BNC     ?0008
+   \                     ?0010:
+     96              for(i=0;i<7;i++){
+   \   0042   F0..                   MOV     R1, S:ucLEDs
+   \   0044   21                     CLR1    CY
+   \   0045   27                     ROLC    R1, 0x1
+   \   0046   41                     INC     R1
+   \   0047   F2..                   MOV     S:ucLEDs, R1
+     97                 ucLEDs=(ucLEDs<<1)+0x01;
+   \   0049   A10A                   MOV     R1, #0xA
+   \   004B   9A....                 CALL    vWait50
+   \   004E   40                     INC     R0
+     98                 vWait50(10);                    // Delay of 500 ms 
+     99              }
+   \   004F   FAEC                   BR      ?0009
+   \                     ?0008:
+   \   0051   11..7F                 MOV     S:ucLEDs, #0x7F
+    100              ucLEDs=0x7F;    
+   \   0054   A000                   MOV     R0, #0x0
+   \                     ?0013:
+   \   0056   60                     MOV     R1, R0
+   \   0057   4D07                   CMP     R1, #0x7
+   \   0059   9D10                   BNC     ?0012
+   \                     ?0014:
+    101              for(i=0;i<7;i++){
+   \   005B   F0..                   MOV     R1, S:ucLEDs
+   \   005D   21                     CLR1    CY
+   \   005E   25                     RORC    R1, 0x1
+   \   005F   0D80                   ADD     R1, #0x80
+   \   0061   F2..                   MOV     S:ucLEDs, R1
+    102                 ucLEDs=(ucLEDs>>1)+0x80;
+   \   0063   A10A                   MOV     R1, #0xA
+   \   0065   9A....                 CALL    vWait50
+   \   0068   40                     INC     R0
+    103                 vWait50(10);                    // Delay of 500 ms 
+    104              }
+   \   0069   FAEB                   BR      ?0013
+   \                     ?0012:
+    105              return;
+   \   006B   B0                     POP     RP0
+   \   006C   AF                     RET
+   \                     vShow3:
+    106          }
+    107          /* ============================================================================
+    108          **  Module name: vShow3
+    109          **
+    110          **  Description:
+    111          **               This module defines lightshow number3.
+    112          **
+    113          **  Operation:
+    114          **               -
+    115          ** ============================================================================
+    116          */
+    117          void vShow3(void)
+   \   006D                          ;vShow3
+   \   006D   B1                     PUSH    RP0
+    118          {
+    119              unsigned char i;
+   \   006E   11..FE                 MOV     S:ucLEDs, #0xFE
+    120              ucLEDs=0xFE;                      
+   \   0071   A000                   MOV     R0, #0x0
+   \                     ?0017:
+   \   0073   60                     MOV     R1, R0
+   \   0074   4D08                   CMP     R1, #0x8
+   \   0076   9D0F                   BNC     ?0016
+   \                     ?0018:
+    121              for(i=0;i<8;i++){
+   \   0078   A102                   MOV     R1, #0x2
+   \   007A   9A....                 CALL    vWait50
+    122                 vWait50(2);                    // Delay of 100 ms 
+   \   007D   F0..                   MOV     R1, S:ucLEDs
+   \   007F   21                     CLR1    CY
+   \   0080   27                     ROLC    R1, 0x1
+   \   0081   41                     INC     R1
+   \   0082   F2..                   MOV     S:ucLEDs, R1
+   \   0084   40                     INC     R0
+    123                 ucLEDs=(ucLEDs<<1)+0x01;
+    124              }
+   \   0085   FAEC                   BR      ?0017
+   \                     ?0016:
+    125              return;
+   \   0087   B0                     POP     RP0
+   \   0088   AF                     RET
+   \                     vShow4:
+    126          }
+    127          
+    128          /* ============================================================================
+    129          **  Module name: vShow4
+    130          **
+    131          **  Description:
+    132          **               This module defines lightshow number4.
+    133          **
+    134          **  Operation:
+    135          **               -
+    136          ** ============================================================================
+    137          */
+    138          void vShow4(void)
+   \   0089                          ;vShow4
+   \   0089   B1                     PUSH    RP0
+    139          {
+    140              unsigned char i;
+   \   008A   11..01                 MOV     S:ucLEDs, #0x1
+    141              ucLEDs=0x01;
+   \   008D   A000                   MOV     R0, #0x0
+   \                     ?0021:
+   \   008F   60                     MOV     R1, R0
+   \   0090   4D08                   CMP     R1, #0x8
+   \   0092   9D0E                   BNC     ?0020
+   \                     ?0022:
+    142              for(i=0;i<8;i++){
+   \   0094   A105                   MOV     R1, #0x5
+   \   0096   9A....                 CALL    vWait50
+    143                 vWait50(5);                    // Delay of 250 ms 
+   \   0099   F0..                   MOV     R1, S:ucLEDs
+   \   009B   21                     CLR1    CY
+   \   009C   27                     ROLC    R1, 0x1
+   \   009D   F2..                   MOV     S:ucLEDs, R1
+   \   009F   40                     INC     R0
+    144                 ucLEDs=(ucLEDs<<1);
+    145              }
+   \   00A0   FAED                   BR      ?0021
+   \                     ?0020:
+    146              return;
+   \   00A2   B0                     POP     RP0
+   \   00A3   AF                     RET
+   \                     vShow5:
+    147          }
+    148          
+    149          /* ============================================================================
+    150          **  Module name: vShow5
+    151          **
+    152          **  Description:
+    153          **               This module defines lightshow number5.
+    154          **
+    155          **  Operation:
+    156          **               -
+    157          ** ============================================================================
+    158          */
+    159          void vShow5(void)
+   \   00A4                          ;vShow5
+   \   00A4   B1                     PUSH    RP0
+    160          {
+    161              unsigned char i;
+   \   00A5   11..EE                 MOV     S:ucLEDs, #0xEE
+    162              ucLEDs=0xEE;
+   \   00A8   A000                   MOV     R0, #0x0
+   \                     ?0025:
+   \   00AA   60                     MOV     R1, R0
+   \   00AB   4D04                   CMP     R1, #0x4
+   \   00AD   9D0F                   BNC     ?0024
+   \                     ?0026:
+    163              for(i=0;i<4;i++){
+   \   00AF   A102                   MOV     R1, #0x2
+   \   00B1   9A....                 CALL    vWait50
+    164                 vWait50(2);                     // Delay of 100 ms 
+   \   00B4   F0..                   MOV     R1, S:ucLEDs
+   \   00B6   21                     CLR1    CY
+   \   00B7   27                     ROLC    R1, 0x1
+   \   00B8   41                     INC     R1
+   \   00B9   F2..                   MOV     S:ucLEDs, R1
+   \   00BB   40                     INC     R0
+    165                 ucLEDs = (ucLEDs << 1) + 0x01;
+    166              }
+    167              
+   \   00BC   FAEC                   BR      ?0025
+   \                     ?0024:
+    168              return;
+   \   00BE   B0                     POP     RP0
+   \   00BF   AF                     RET
+   \                     vShow6:
+    169          }
+    170          /* ============================================================================
+    171          **  Module name: vShow6
+    172          **
+    173          **  Description:
+    174          **               This module defines lightshow number6.
+    175          **
+    176          **  Operation:
+    177          **               -
+    178          ** ============================================================================
+    179          */
+    180          void vShow6(void)
+   \   00C0                          ;vShow6
+   \   00C0   B1                     PUSH    RP0
+    181          {
+    182              unsigned char i;
+   \   00C1   11..FE                 MOV     S:ucLEDs, #0xFE
+    183              ucLEDs=0xFE;                       
+   \   00C4   A000                   MOV     R0, #0x0
+   \                     ?0029:
+   \   00C6   60                     MOV     R1, R0
+   \   00C7   4D08                   CMP     R1, #0x8
+   \   00C9   9D0E                   BNC     ?0028
+   \                     ?0030:
+    184              for(i=0;i<8;i++){
+   \   00CB   A10A                   MOV     R1, #0xA
+   \   00CD   9A....                 CALL    vWait50
+    185                 vWait50(10);                    // Delay of 500 ms 
+   \   00D0   F0..                   MOV     R1, S:ucLEDs
+   \   00D2   21                     CLR1    CY
+   \   00D3   27                     ROLC    R1, 0x1
+   \   00D4   F2..                   MOV     S:ucLEDs, R1
+   \   00D6   40                     INC     R0
+    186                 ucLEDs=(ucLEDs<<1);
+    187              }
+   \   00D7   FAED                   BR      ?0029
+   \                     ?0028:
+   \   00D9   A000                   MOV     R0, #0x0
+   \                     ?0033:
+   \   00DB   60                     MOV     R1, R0
+   \   00DC   4D08                   CMP     R1, #0x8
+   \   00DE   9D0F                   BNC     ?0032
+   \                     ?0034:
+    188              for(i=0;i<8;i++){
+   \   00E0   F0..                   MOV     R1, S:ucLEDs
+   \   00E2   21                     CLR1    CY
+   \   00E3   27                     ROLC    R1, 0x1
+   \   00E4   41                     INC     R1
+   \   00E5   F2..                   MOV     S:ucLEDs, R1
+    189                 ucLEDs=(ucLEDs<<1)+0x01;
+   \   00E7   A10A                   MOV     R1, #0xA
+   \   00E9   9A....                 CALL    vWait50
+   \   00EC   40                     INC     R0
+    190                 vWait50(10);                    // Delay of 500 ms 
+    191              }   
+   \   00ED   FAEC                   BR      ?0033
+   \                     ?0032:
+    192              return;
+   \   00EF   B0                     POP     RP0
+   \   00F0   AF                     RET
+   \                     vShow7:
+    193          }
+    194          /* ============================================================================
+    195          **  Module name: vShow7
+    196          **
+    197          **  Description:
+    198          **               This module defines lightshow number7.
+    199          **
+    200          **  Operation:
+    201          **               -
+    202          ** ============================================================================
+    203          */
+    204          void vShow7(void)
+   \   00F1                          ;vShow7
+   \   00F1   B1                     PUSH    RP0
+    205          {
+    206              unsigned char i;
+   \   00F2   11..7F                 MOV     S:ucLEDs, #0x7F
+    207              ucLEDs=0x7F;                      
+   \   00F5   A000                   MOV     R0, #0x0
+   \                     ?0037:
+   \   00F7   60                     MOV     R1, R0
+   \   00F8   4D08                   CMP     R1, #0x8
+   \   00FA   9D10                   BNC     ?0036
+   \                     ?0038:
+    208              for(i=0;i<8;i++){
+   \   00FC   A101                   MOV     R1, #0x1
+   \   00FE   9A....                 CALL    vWait50
+    209                 vWait50(1);                    // Delay of 50 ms 
+   \   0101   F0..                   MOV     R1, S:ucLEDs
+   \   0103   21                     CLR1    CY
+   \   0104   25                     RORC    R1, 0x1
+   \   0105   0D80                   ADD     R1, #0x80
+   \   0107   F2..                   MOV     S:ucLEDs, R1
+   \   0109   40                     INC     R0
+    210                 ucLEDs=(ucLEDs>>1)+0x80;
+    211              }
+   \   010A   FAEB                   BR      ?0037
+   \                     ?0036:
+    212              return;
+   \   010C   B0                     POP     RP0
+   \   010D   AF                     RET
+   \                     vShow8:
+    213          }
+    214          
+    215          /* ============================================================================
+    216          **  Module name: vShow8
+    217          **
+    218          **  Description:
+    219          **               This module defines lightshow number8.
+    220          **
+    221          **  Operation:
+    222          **               -
+    223          ** ============================================================================
+    224          */
+    225          void vShow8(void)
+   \   010E                          ;vShow8
+   \   010E   B1                     PUSH    RP0
+    226          {
+    227              unsigned char i;
+   \   010F   11..FC                 MOV     S:ucLEDs, #0xFC
+    228              ucLEDs=0xFC;
+   \   0112   A000                   MOV     R0, #0x0
+   \                     ?0041:
+   \   0114   60                     MOV     R1, R0
+   \   0115   4D04                   CMP     R1, #0x4
+   \   0117   9D12                   BNC     ?0040
+   \                     ?0042:
+    229              for (i=0;i<4;i++){
+   \   0119   A102                   MOV     R1, #0x2
+   \   011B   9A....                 CALL    vWait50
+    230                vWait50(2);                     // Delay of 100 ms 
+   \   011E   F0..                   MOV     R1, S:ucLEDs
+   \   0120   21                     CLR1    CY
+   \   0121   27                     ROLC    R1, 0x1
+   \   0122   21                     CLR1    CY
+   \   0123   27                     ROLC    R1, 0x1
+   \   0124   0D03                   ADD     R1, #0x3
+   \   0126   F2..                   MOV     S:ucLEDs, R1
+   \   0128   40                     INC     R0
+    231                ucLEDs = (ucLEDs << 2) + 0x03;
+    232              }
+   \   0129   FAE9                   BR      ?0041
+   \                     ?0040:
+    233              return;
+   \   012B   B0                     POP     RP0
+   \   012C   AF                     RET
+    234          }
+    235          
+
+Errors: none
+Warnings: none
+Code size: 301
+Constant size: 0
+Static variable size: 0
+

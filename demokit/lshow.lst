@@ -1,0 +1,314 @@
+##############################################################################
+#                                                                            #
+# IAR 78000 C-Compiler Lite V3.33A/WIN                                       #
+#                                                                            #
+#       Compile time  =  11/Jun/2018  12:44:11                               #
+#       Target option =  78K/0  - 7801x and above / 780xxx                   #
+#       Memory model  =  standard                                            #
+#       Source file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\source\lshow.c#
+#       List file     =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\lshow.lst#
+#       Object file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\lshow.r26#
+#       Command line  =  -v1 -ms                                             #
+#                        -OF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -e -K -gA -z3 -RCODE -r0r                           #
+#                        -LF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -q -T -t8                                           #
+#                        -IC:\Program Files\IAR Systems\ew23\78000\inc\      #
+#                        -IF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\inc\ #
+#                        F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\source\lshow.c #
+#                                                                            #
+#          Copyright 2001 NEC Electronics, IAR Systems. All rights reserved. #
+##############################################################################
+
+   \                     vFlashLED:
+      1          /*============================================================================
+      2          ** PROJECT      = 78K0 Demonstration Board
+      3          ** MODULE       = lightshow.c
+      4          ** SHORT DESC.  = -
+      5          ** DEVICE       = uPD78F0066
+      6          ** VERSION      = 1.0
+      7          ** DATE         = 02.01.2000
+      8          ** LAST CHANGE  = -
+      9          ** ===========================================================================
+     10          ** Description:  A predefined sequence of patterns is shown. Every push of
+     11          **               Key1 selects the next pattern, every push of Key 2 selects
+     12          **               the previous pattern.
+     13          **
+     14          ** ===========================================================================
+     15          ** Environment:  Device:         uPD78F0066
+     16          **               Assembler:      A78000         Version 3.30A
+     17          **               C-Compiler:     ICC78000       Version 3.30A
+     18          **               Linker:         XLINK          Version 4.51O
+     19          **               Simulator:      SM78K0         Version 2.10
+     20          ** ===========================================================================
+     21          ** By:          NEC Electronics (Europe) GmbH
+     22          **              Oberrather Strasse 4
+     23          **              D-40472 Duesseldorf
+     24          **
+     25          ** ===========================================================================
+     26          Changes:
+     27          ** ===========================================================================
+     28          */
+     29          // mjh change 1 for watching action of build tools
+     30          //Monday, 11 June 2018
+     31          #define mjh 1
+     32          //-----------------------------------------------------------------------------
+     33          // Include files
+     34          //-----------------------------------------------------------------------------
+     35          #include <in78000.h>
+     36          #include "DF0066.h"
+     37          #include "defines.h"
+     38          #include "mjhdefines.h"
+     39          
+     40          //-----------------------------------------------------------------------------
+     41          // Function prototyps
+     42          //-----------------------------------------------------------------------------
+     43          void vFlashLED (unsigned char); // Flash LED's
+     44          void vRestartT2 (void);         // Restart Timer2
+     45          void vWait50 (unsigned char);   // n *  50ms delay
+     46          
+     47          extern void vShow1 (void);      // Lightshow 1
+     48          extern void vShow2 (void);      // Lightshow 2
+     49          extern void vShow3 (void);      // Lightshow 3
+     50          extern void vShow4 (void);      // Lightshow 4
+     51          extern void vShow5 (void);      // Lightshow 5
+     52          extern void vShow6 (void);      // Lightshow 6
+     53          extern void vShow7 (void);      // Lightshow 7
+     54          extern void vShow8 (void);      // Lightshow 8
+     55          extern void vHardwareInit (void);       // Initialization Hardware
+     56          extern void vSoftwareInit (void);       // Initialization measurement variables
+     57          
+     58          //-----------------------------------------------------------------------------
+     59          // Global variables
+     60          //-----------------------------------------------------------------------------
+     61          bit bTimer51Flag;               // Status Flag Timer
+     62          bit bKey1Flag;                  // Status Key1
+     63          bit bKey2Flag;                  // Status Key2
+     64          saddr unsigned char ucLEDs = 0xff;      // LED output value
+     65          
+     66          void (*pShow[8]) (void) =
+     67          {
+     68            vShow1, vShow2,               // Function-Pointer array
+     69          vShow3, vShow4, vShow5, vShow6, vShow7, vShow8};
+     70          
+     71          /* ============================================================================
+     72          **  Module name: vFlashLED
+     73          **
+     74          **  Description:
+     75          **               This module flashes all LEDs n times.
+     76          **
+     77          **  Operation:
+     78          **               -
+     79          ** ============================================================================
+     80          */
+     81          void
+     82          vFlashLED (unsigned char Number)
+   \   0000                          ;vFlashLED
+   \   0000   B1                     PUSH    RP0
+   \   0001   70                     MOV     R0, R1
+   \                     ?0001:
+     83          {
+   \   0002   60                     MOV     R1, R0
+   \   0003   4D00                   CMP     R1, #0x0
+   \   0005   AD13                   BZ      ?0000
+   \                     ?0002:
+     84            while (Number > 0)
+     85              {
+   \   0007   11..00                 MOV     S:ucLEDs, #0x0
+     86                ucLEDs = 0x00;
+   \   000A   A10A                   MOV     R1, #0xA
+   \   000C   9A....                 CALL    vWait50
+     87                vWait50 (10);             // Delay of 500 ms
+   \   000F   11..FF                 MOV     S:ucLEDs, #0xFF
+     88                ucLEDs = 0xff;
+   \   0012   A10A                   MOV     R1, #0xA
+   \   0014   9A....                 CALL    vWait50
+     89                vWait50 (10);             // Delay of 500 ms
+   \   0017   50                     DEC     R0
+     90                Number--;
+     91              }
+   \   0018   FAE8                   BR      ?0001
+   \                     ?0000:
+     92            return;
+   \   001A   B0                     POP     RP0
+   \   001B   AF                     RET
+   \                     vRestartT2:
+     93          }
+     94          
+     95          /* ============================================================================
+     96          **  Module name: vRestartT51
+     97          **
+     98          **  Description:
+     99          **               This module restarts Timer51
+    100          **
+    101          **  Operation:
+    102          **               -
+    103          ** ============================================================================
+    104          */
+    105          void
+    106          vRestartT2 (void)
+   \   001C                          ;vRestartT2
+    107          {
+   \   001C   ....                   CLR1    bTimer51Flag
+    108            bTimer51Flag = 0;             // Reset Timer51 Flag
+   \   001E   717B74                 CLR1    0xFF74.7                        ; Sfr Bit: TMC51.7
+    109            TMC51 .7 = 0;                 // Stop  Timer51
+   \   0021   717A74                 SET1    0xFF74.7                        ; Sfr Bit: TMC51.7
+    110            TMC51 .7 = 1;                 // Start Timer51
+   \   0024   AF                     RET
+   \                     vWait50:
+    111          }
+    112          
+    113          
+    114          /* ============================================================================
+    115          **  Module name: vWait50
+    116          **
+    117          **  Description:
+    118          **               This module delays the program for n * 50 ms.
+    119          **
+    120          **  Operation:
+    121          **               -
+    122          ** ============================================================================
+    123          */
+    124          void
+    125          vWait50 (unsigned char Number)
+   \   0025                          ;vWait50
+   \   0025   B1                     PUSH    RP0
+   \   0026   70                     MOV     R0, R1
+    126          {
+    127          #ifdef SIMULATOR                // shortens the delay time (/32)
+    131          #endif
+   \   0027   9A....                 CALL    vRestartT2
+   \                     ?0004:
+    132            vRestartT2 ();
+    133          
+   \   002A   60                     MOV     R1, R0
+   \   002B   4D00                   CMP     R1, #0x0
+   \   002D   AD0A                   BZ      ?0003
+   \                     ?0005:
+   \                     ?0007:
+    134            while (Number > 0)
+    135              {
+   \   002F   ....02                 BT      bTimer51Flag, ?0006
+   \                     ?0008:
+    136                while (bTimer51Flag == 0)
+    137                  {
+    138                  }
+   \   0032   FAFB                   BR      ?0007
+   \                     ?0006:
+   \   0034   ....                   CLR1    bTimer51Flag
+    139                bTimer51Flag = 0;         // Reset status flag Timer51
+   \   0036   50                     DEC     R0
+    140                Number--;
+    141              }
+   \   0037   FAF1                   BR      ?0004
+   \                     ?0003:
+    142            return;
+   \   0039   B0                     POP     RP0
+   \   003A   AF                     RET
+   \                     main:
+    143          }
+    144          
+    145          
+    146          
+    147          
+    148          
+    149          
+    150          /* ============================================================================
+    151          **  main function
+    152          ** ============================================================================
+    153          */
+    154          
+    155          void
+    156          main (void)
+   \   003B                          ;main
+    157          {
+   \   003B   A200                   MOV     R2, #0x0
+    158            unsigned char i = 0;
+   \   003D   7B1E                   DI
+    159            _DI ();                       // Disable all interrupts
+   \   003F   9A....                 CALL    vHardwareInit
+    160            vHardwareInit ();             // Peripheral settings
+   \   0042   9A....                 CALL    vSoftwareInit
+    161            vSoftwareInit ();             // Variable Initialization
+   \   0045   7A1E                   EI
+    162            _EI ();                       // Enable all interrupts
+   \   0047   13600C                 MOV     0xFF60, #0xC                    ; Sfr: TMC0
+    163            TMC0 = 0x0C;                  // Start Timer 0
+   \   004A   A102                   MOV     R1, #0x2
+   \   004C   9A....                 CALL    vFlashLED
+   \                     ?0010:
+    164            vFlashLED (2);                // Signal Program start
+   \                     ?0011:
+    165            while (TRUE)
+    166              {
+   \   004F   31....0C               BF      bKey1Flag, ?0013
+   \                     ?0012:
+    167                if (bKey1Flag == 1)
+    168                  {                       // Key1 pressed ?
+   \   0053   ....                   CLR1    bKey1Flag
+    169                    bKey1Flag = 0;        // Reset status flag Key1
+   \   0055   62                     MOV     R1, R2
+   \   0056   4D07                   CMP     R1, #0x7
+   \   0058   9D03                   BNC     ?0015
+   \                     ?0014:
+    170                    if (i < 7)
+   \   005A   42                     INC     R2
+    171                      i++;
+   \   005B   FA02                   BR      ?0016
+   \                     ?0015:
+    172                    else
+   \   005D   A200                   MOV     R2, #0x0
+   \                     ?0016:
+   \                     ?0013:
+    173                      i = 0;
+    174                  }
+   \   005F   31....0C               BF      bKey2Flag, ?0018
+   \                     ?0017:
+    175                if (bKey2Flag == 1)
+    176                  {                       // Key1 pressed ?
+   \   0063   ....                   CLR1    bKey2Flag
+    177                    bKey2Flag = 0;        // Reset status flag Key1
+   \   0065   62                     MOV     R1, R2
+   \   0066   4D00                   CMP     R1, #0x0
+   \   0068   AD03                   BZ      ?0020
+   \                     ?0019:
+    178                    if (i > 0)
+   \   006A   52                     DEC     R2
+    179                      i--;
+   \   006B   FA02                   BR      ?0021
+   \                     ?0020:
+    180                    else
+   \   006D   A207                   MOV     R2, #0x7
+   \                     ?0021:
+   \                     ?0018:
+    181                      i = 7;
+    182                  }
+   \   006F   62                     MOV     R1, R2
+   \   0070   70                     MOV     R0, R1
+   \   0071   A100                   MOV     R1, #0x0
+   \   0073   21                     CLR1    CY
+   \   0074   30                     XCH     R1, R0
+   \   0075   27                     ROLC    R1, 0x1
+   \   0076   30                     XCH     R1, R0
+   \   0077   27                     ROLC    R1, 0x1
+   \   0078   CA....                 ADDW    RP0, #pShow
+   \   007B   D6                     MOVW    RP3, RP0
+   \   007C   87                     MOV     R1, [RP3]
+   \   007D   70                     MOV     R0, R1
+   \   007E   AE01                   MOV     R1, [RP3+0x1]
+   \   0080   D6                     MOVW    RP3, RP0
+   \   0081   9A....                 CALL    ?IND_CALL_L06
+    183                pShow[i] ();              // call selected show
+    184              }
+   \   0084   FAC9                   BR      ?0010
+   \                     ?0009:
+   \   0086   AF                     RET
+    185          }
+
+Errors: none
+Warnings: none
+Code size: 135
+Constant size: 17
+Static variable size: 17
+

@@ -1,0 +1,230 @@
+##############################################################################
+#                                                                            #
+# IAR 78000 C-Compiler Lite V3.33A/WIN                                       #
+#                                                                            #
+#       Compile time  =  11/Jun/2018  11:47:32                               #
+#       Target option =  78K/0  - 7801x and above / 780xxx                   #
+#       Memory model  =  standard                                            #
+#       Source file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\source\init.c#
+#       List file     =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\init.lst#
+#       Object file   =  f:\nec\demo\78k - test it!\sample programs\lightshow\demokit\init.r26#
+#       Command line  =  -v1 -ms                                             #
+#                        -OF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -e -K -gA -z3 -RCODE -r0r                           #
+#                        -LF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\ #
+#                        -q -T -t8                                           #
+#                        -IC:\Program Files\IAR Systems\ew23\78000\inc\      #
+#                        -IF:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\inc\ #
+#                        F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\source\init.c #
+#                                                                            #
+#          Copyright 2001 NEC Electronics, IAR Systems. All rights reserved. #
+##############################################################################
+
+   \                     vHardwareInit:
+      1          /*============================================================================
+      2          ** PROJECT      = 78K0 Demonstration Board
+      3          ** MODULE       = init.c
+      4          ** SHORT DESC.  = -
+      5          ** DEVICE       = uPD78F0066
+      6          ** VERSION      = 1.0
+      7          ** DATE         = 02.01.2000
+      8          ** LAST CHANGE  = -
+      9          ** ===========================================================================
+     10          ** Description:  Initialization of Registers and Bit Variables
+     11          ** ===========================================================================
+     12          ** Environment:  Device:         uPD78F0066                                    
+     13          **               Assembler:      A78000         Version 3.30A                     
+     14          **               C-Compiler:     ICC78000       Version 3.30A
+     15          **               Linker:         XLINK          Version 4.51O
+     16          **               Simulator:      SM78K0         Version 2.10 
+     17          ** ===========================================================================
+     18          ** By:          NEC Electronics (Europe) GmbH
+     19          **              Oberrather Strasse 4
+     20          **              D-40472 Duesseldorf
+     21          **
+     22          ** ===========================================================================
+     23          Changes:           
+     24          ** ===========================================================================
+     25          */
+     26          
+     27          //-----------------------------------------------------------------------------
+     28          // Include files
+     29          //-----------------------------------------------------------------------------
+     30          #include <in78000.h>
+     31          #include "DF0066.h"                       
+     32          #include "defines.h"
+     33          
+     34          //-----------------------------------------------------------------------------
+     35          // Global variables
+     36          //-----------------------------------------------------------------------------
+     37          extern bit           bTimer51Flag;     // Status Flag Timer51
+     38          extern bit           bKey1Flag;        // Status Flag Key1
+     39          extern bit           bKey2Flag;        // Status Flag Key2
+     40          
+     41          
+     42          /* ============================================================================
+     43          **  Module name: vHardwareInit
+     44          **
+     45          **  Description:
+     46          **               This module is to initialize some peripheral hardware.
+     47          **
+     48          **  Operation:
+     49          **               Sets the clock generator, the port modes and output latches
+     50          **               and initializes the interrupts.
+     51          ** ============================================================================
+     52          */
+     53          void vHardwareInit(void)               // Hardware inizialization
+   \   0000                          ;vHardwareInit
+     54          {
+     55          // clock generator setting
+     56          //------------------------
+   \   0000   13FB00                 MOV     0xFFFB, #0x0                    ; Sfr: PCC
+     57              PCC  = 0x00;                       // Use high speed mode 
+   \   0003   13FA02                 MOV     0xFFFA, #0x2                    ; Sfr: OSTS
+     58              OSTS = 0x02;                       // 2^15/fx ms wait after STOP release by interrupt
+   \   0006   13F0CC                 MOV     0xFFF0, #0xCC                   ; Sfr: IMS
+     59              IMS  = 0xCC;                       // Select 1024 Byte RAM and 48k Byte ROM
+   \   0009   13F404                 MOV     0xFFF4, #0x4                    ; Sfr: IXS
+     60              IXS  = 0x04;                       // Select 4096 Byte RAM 
+     61          
+     62          // port setting
+     63          //-------------
+   \   000C   110000                 MOV     S:0xFF00, #0x0                  ; Sfr: P0
+     64              P0     = 0x00;                     // Set output latch to 0
+   \   000F   110200                 MOV     S:0xFF02, #0x0                  ; Sfr: P2
+     65              P2     = 0x00;                     // Set output latch to 0
+   \   0012   110300                 MOV     S:0xFF03, #0x0                  ; Sfr: P3
+     66              P3     = 0x00;                     // Set output latch to 0
+   \   0015   110400                 MOV     S:0xFF04, #0x0                  ; Sfr: P4
+     67              P4     = 0x00;                     // Set output latch to 0
+   \   0018   1105FF                 MOV     S:0xFF05, #0xFF                 ; Sfr: P5
+     68              P5     = 0xff;                     // Set output latch to 0xff
+   \   001B   110600                 MOV     S:0xFF06, #0x0                  ; Sfr: P6
+     69              P6     = 0x00;                     // Set output latch to 0
+   \   001E   110700                 MOV     S:0xFF07, #0x0                  ; Sfr: P7
+     70              P7     = 0x00;                     // Set output latch to 0
+   \   0021   110800                 MOV     S:0xFF08, #0x0                  ; Sfr: P8
+     71              P8     = 0x00;                     // Set output latch to 0
+   \   0024   110800                 MOV     S:0xFF08, #0x0                  ; Sfr: P8
+     72              P8     = 0x00;                     // Set output latch to 0
+   \   0027   1320FF                 MOV     0xFF20, #0xFF                   ; Sfr: PM0
+     73              PM0    = 0xFF;                     // Port 0 =  input (8-bits)
+   \   002A   1322FF                 MOV     0xFF22, #0xFF                   ; Sfr: PM2
+     74              PM2    = 0xFF;                     // Port 2 =  input (8-bits) 
+   \   002D   1323FF                 MOV     0xFF23, #0xFF                   ; Sfr: PM3
+     75              PM3    = 0xFF;                     // Port 3 =  input (8-bits)       
+   \   0030   132400                 MOV     0xFF24, #0x0                    ; Sfr: PM4
+     76              PM4    = 0x00;                     // Port 4 =  input (8-bits)
+   \   0033   132500                 MOV     0xFF25, #0x0                    ; Sfr: PM5
+     77              PM5    = 0x00;                     // Port 5 = output (8-bits)
+   \   0036   1326FF                 MOV     0xFF26, #0xFF                   ; Sfr: PM6
+     78              PM6    = 0xFF;                     // Port 6 =  input (4-bits) 
+   \   0039   132788                 MOV     0xFF27, #0x88                   ; Sfr: PM7
+     79              PM7    = 0x88;                     // Port 7.7,7.3 input, other output 
+   \   003C   1328E0                 MOV     0xFF28, #0xE0                   ; Sfr: PM8
+     80              PM8    = 0xE0;                     // Port 8 = output (5 bits)
+   \   003F   1329FF                 MOV     0xFF29, #0xFF                   ; Sfr: PM9
+     81              PM9    = 0xFF;                     // Port 9 =  input (3-bits) 
+     82             
+     83          // interrupt setting                    
+     84          //------------------
+     85          
+   \   0042   13E000                 MOV     0xFFE0, #0x0                    ; Sfr: IF0L
+     86              IF0L   = 0x00;                     // Reset all interrupt request bits
+   \   0045   13E100                 MOV     0xFFE1, #0x0                    ; Sfr: IF0H
+     87              IF0H   = 0x00;
+   \   0048   13E200                 MOV     0xFFE2, #0x0                    ; Sfr: IF1L
+     88              IF1L   = 0x00;
+   \   004B   13E4FF                 MOV     0xFFE4, #0xFF                   ; Sfr: MK0L
+     89              MK0L   = 0xFF;                     // Disable all interrupts 
+   \   004E   13E5FF                 MOV     0xFFE5, #0xFF                   ; Sfr: MK0H
+     90              MK0H   = 0xFF;
+   \   0051   13E6FF                 MOV     0xFFE6, #0xFF                   ; Sfr: MK1L
+     91              MK1L   = 0xFF;  
+   \   0054   13E8FF                 MOV     0xFFE8, #0xFF                   ; Sfr: PR0L
+     92              PR0L   = 0xFF;                     // Set all interrupts to low priority
+   \   0057   13E9FF                 MOV     0xFFE9, #0xFF                   ; Sfr: PR0H
+     93              PR0H   = 0xFF;             
+   \   005A   13EAFF                 MOV     0xFFEA, #0xFF                   ; Sfr: PR1L
+     94              PR1L   = 0xFF;            
+     95          
+     96          // ext. Interrupt setting
+     97          // -------------------
+     98          
+   \   005D   13480C                 MOV     0xFF48, #0xC                    ; Sfr: EGP
+     99              EGP    = 0x0C;                     // Enable ext.interrupt rising edge 
+   \   0060   134900                 MOV     0xFF49, #0x0                    ; Sfr: EGN
+    100              EGN    = 0x00;                     // P2, P3
+   \   0063   713BE4                 CLR1    0xFFE4.3                        ; Sfr Bit: MK0L.3
+    101              PMK2   = FALSE;                    // Enable Port P0.2 interrupt (Mask Flag Register)
+   \   0066   714BE4                 CLR1    0xFFE4.4                        ; Sfr Bit: MK0L.4
+    102              PMK3   = FALSE;                    // Enable Port P0.3 interrupt (Mask Flag Register)
+    103            
+    104          // 8 Bit Timer setting
+    105          // --------------
+   \   0069   137000                 MOV     0xFF70, #0x0                    ; Sfr: TMC50
+    106              TMC50  = 0x00;                     // Stop timer operation
+   \   006C   137400                 MOV     0xFF74, #0x0                    ; Sfr: TMC51
+    107              TMC51  = 0x00;                     // Stop timer operation
+   \   006F   137507                 MOV     0xFF75, #0x7                    ; Sfr: TCL51
+    108              TCL51  = 0x07;                     // Set timer clock :  fx/2^11 (4.194304 MHz -> 2048 Hz)   Hz 
+   \   0072   111166                 MOV     S:0xFF11, #0x66                 ; Sfr: CR51
+    109              CR51   = 0x66;                     // Timer51 compare value =>  50ms intervall
+   \   0075   716BE1                 CLR1    0xFFE1.6                        ; Sfr Bit: IF0H.6
+    110              TMIF51 = FALSE;                    // Clear interrupt request Bit Timer51
+   \   0078   716BE5                 CLR1    0xFFE5.6                        ; Sfr Bit: MK0H.6
+    111              TMMK51 = FALSE;                    // Enable Timer51 Interrupt
+   \   007B   137480                 MOV     0xFF74, #0x80                   ; Sfr: TMC51
+    112              TMC51  = 0x80;                     // Start Timer 51
+    113                                                 // no output, single mode
+    114                                                 // clear and start by matching TM51 and CR51
+    115          // 16 Bit Timer setting
+    116          // --------------------
+    117             
+   \   007E   136002                 MOV     0xFF60, #0x2                    ; Sfr: TMC0
+    118              TMC0   = 0x02;                     // Stop and Clear Timer 0
+   \   0081   136200                 MOV     0xFF62, #0x0                    ; Sfr: CRC0
+    119              CRC0   = 0x00;                     // Register CR00, CR01 operate as compare register
+   \   0084   EE0A8F02               MOVW    S:0xFF0A, #0x28F                ; Sfr: CR00
+    120              CR00   = 0x028F;                   // Compare values for 10ms Intervall 
+   \   0088   136300                 MOV     0xFF63, #0x0                    ; Sfr: TOC0
+    121              TOC0   = 0x00;                     // Disable Timer output                                       
+   \   008B   136102                 MOV     0xFF61, #0x2                    ; Sfr: PRM0
+    122              PRM0   = 0x02;                     // Clock selection: fx/2^6 (4.194304 MHz -> 65537 Hz)
+   \   008E   713BE1                 CLR1    0xFFE1.3                        ; Sfr Bit: IF0H.3
+    123              TMIF00 = FALSE;                    // Clear interrupt request Bit Timer0
+   \   0091   713BE5                 CLR1    0xFFE5.3                        ; Sfr Bit: MK0H.3
+    124              TMMK00 = FALSE;                    // Enable Timer0 Interrupt
+   \   0094   AF                     RET
+   \                     vSoftwareInit:
+    125          }
+    126          
+    127          /* ============================================================================
+    128          **  Module name: vSoftwareInit
+    129          **
+    130          **  Description:
+    131          **               This module is to initialize the bit variables 
+    132          **
+    133          **  Operation:
+    134          **               -
+    135          ** ============================================================================
+    136          */
+    137           
+    138          void vSoftwareInit(void)
+   \   0095                          ;vSoftwareInit
+    139          {
+   \   0095   ....                   CLR1    bTimer51Flag
+    140              bTimer51Flag = FALSE;              // Reset status flag Timer51
+   \   0097   ....                   CLR1    bKey1Flag
+    141              bKey1Flag    = FALSE;              // Reset status flag Key1
+   \   0099   ....                   CLR1    bKey2Flag
+    142              bKey2Flag    = FALSE;              // Reset status flag Key2
+   \   009B   AF                     RET
+    143          }
+
+Errors: none
+Warnings: none
+Code size: 156
+Constant size: 0
+Static variable size: 0
+

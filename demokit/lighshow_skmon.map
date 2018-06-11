@@ -1,0 +1,445 @@
+################################################################################
+#                                                                              #
+#      IAR Universal Linker V4.52J/WIN                                         #
+#                                                                              #
+#           Link time     =  11/Jun/2018  12:45:07                             #
+#           Target CPU    =  78000                                             #
+#           List file     =  "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lighshow_SkMon.map"                  #
+#           Output file 1 =  "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lighshow_SkMon.hex"                  #
+#                            Format: intel-standard                            #
+#           Output file 2 =  "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lighshow_SkMon.sym"                  #
+#                            Format: nec2-symbolic                             #
+#           Command line  =  "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\init.r26"                            #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\interrupt.r26"                       #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lshow.r26"                           #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\sequences.r26"                       #
+#                            -o                                                #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lighshow_SkMon.hex"                  #
+#                            -Fnec2 -l                                         #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\Demokit\lighshow_SkMon.map"                  #
+#                            -xms                                              #
+#                            "-IC:\Program Files\IAR Systems\ew23\78000\lib\"  #
+#                            -f                                                #
+#                            "F:\NEC\DEMO\78K - Test it!\Sample Programs\Light #
+#                            show\xcl\Monitor.xcl"                             #
+#                            (-c78000 -Z(CODE)INTVEC=E800-E83F                 #
+#                            -Z(CODE)FLIST,IFLIST=E840-E87F                    #
+#                            -Z(CODE)RCODE,CODE,FCODE,CONST,CSTR,CCSTR,CDATA0, #
+#                            CDATA1,CDATA2=E880-F7FF                           #
+#                            -Z(DATA)CSTACK+80,NO_INIT,IDATA2,UDATA2,ECSTR,TEM #
+#                            P=FB00-FE1F                                       #
+#                            -Z(DATA)WRKSEG,IDATA0,IDATA1,UDATA0,UDATA1=FE20-F #
+#                            EDF                                               #
+#                            -Z(BIT)BITVARS=0000                               #
+#                            -e_small_write=_formatted_write                   #
+#                            -e_medium_read=_formatted_read cl7801s            #
+#                            -h(CODE)E800-F7FF) -Hff                           #
+#                                                                              #
+#                        Copyright 1987-2001 IAR Systems. All rights reserved. #
+################################################################################
+
+
+
+
+
+                ****************************************
+                *                                      *
+                *           CROSS REFERENCE            *
+                *                                      *
+                ****************************************
+
+                  There are no program entries.
+
+
+
+
+                ****************************************
+                *                                      *
+                *              MODULE MAP              *
+                *                                      *
+                ****************************************
+
+
+  FILE NAME : F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\init.r26
+  PROGRAM MODULE, NAME : init
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: E968 - EA03 (9c bytes), align: 1
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           vHardwareInit           E968            main (lshow)
+           vSoftwareInit           E9FD            main (lshow)
+
+    *************************************************************************
+
+  FILE NAME : F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\interrupt.r26
+  PROGRAM MODULE, NAME : interrupt
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: EA04 - EA36 (33 bytes), align: 1
+  Segment part 0. ROOT.       Intra module refs:   Segment part 5
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           vKey1                   EA34 
+               interrupt function
+           vKey2                   EA31 
+               interrupt function
+           vTimer0                 EA04 
+               interrupt function
+           vTimer51                EA2E 
+               interrupt function
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           ?0002                   EA0B 
+           ?0004                   EA10 
+           ?0005                   EA18 
+           ?0006                   EA1F 
+           ?0003                   EA21 
+           ?0007                   EA2C 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: E800 - E821 (22 bytes), align: 1
+    -------------------------------------------------------------------------
+UDATA0
+  Relative segment, address: FE24 - FE26 (3 bytes), align: 1
+  Segment part 10. ROOT.      Intra module refs:   vKey1
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           ucOldLEDs               FE24 
+           ?0000                   FE25 
+           ?0001                   FE26 
+
+    *************************************************************************
+
+  FILE NAME : F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\lshow.r26
+  PROGRAM MODULE, NAME : lshow
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: EA38 - EABE (87 bytes), align: 1
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           main                    EA73            ?C_STARTUP (?CSTARTUP)
+               calls direct and indirect
+           vFlashLED               EA38 
+               calls direct
+           vRestartT2              EA54 
+           vWait50                 EA5D            vShow1 (sequences)
+               calls direct
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           ?0001                   EA3A 
+           ?0002                   EA3F 
+           ?0000                   EA52 
+           ?0004                   EA62 
+           ?0005                   EA67 
+           ?0007                   EA67 
+           ?0008                   EA6A 
+           ?0006                   EA6C 
+           ?0003                   EA71 
+           ?0010                   EA87 
+           ?0011                   EA87 
+           ?0012                   EA8B 
+           ?0014                   EA92 
+           ?0015                   EA95 
+           ?0016                   EA97 
+           ?0013                   EA97 
+           ?0017                   EA9B 
+           ?0019                   EAA2 
+           ?0020                   EAA5 
+           ?0021                   EAA7 
+           ?0018                   EAA7 
+           ?0009                   EABE 
+    -------------------------------------------------------------------------
+IDATA0
+  Relative segment, address: FE22 - FE22 (1 bytes), align: 1
+  Segment part 11. ROOT.      Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ucLEDs                  FE22            vKey1 (interrupt)
+                                                   vShow1 (sequences)
+    -------------------------------------------------------------------------
+CDATA0
+  Relative segment, address: EBEE - EBEE (1 bytes), align: 1
+    -------------------------------------------------------------------------
+IDATA2
+  Relative segment, address: FB80 - FB8F (10 bytes), align: 1
+  Segment part 17. ROOT.      Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           pShow                   FB80 
+    -------------------------------------------------------------------------
+CDATA2
+  Relative segment, address: EBF0 - EBFF (10 bytes), align: 1
+    -------------------------------------------------------------------------
+BITVARS
+  Relative segment, address: FE20.0 - FE20.2 (3 bytes), align: 1
+  Segment part 34. ROOT.      Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           bKey1Flag               FE20.1          vHardwareInit (init)
+                                                   vKey1 (interrupt)
+           bKey2Flag               FE20.2          vHardwareInit (init)
+                                                   vKey1 (interrupt)
+           bTimer51Flag            FE20.0          vHardwareInit (init)
+                                                   vKey1 (interrupt)
+
+    *************************************************************************
+
+  FILE NAME : F:\NEC\DEMO\78K - Test it!\Sample Programs\Lightshow\Demokit\sequences.r26
+  PROGRAM MODULE, NAME : sequences
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: EAC0 - EBEC (12d bytes), align: 1
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           vShow1                  EAC0            Segment part 18 (lshow)
+               calls direct
+           vShow2                  EAF2            Segment part 18 (lshow)
+               calls direct
+           vShow3                  EB2D            Segment part 18 (lshow)
+               calls direct
+           vShow4                  EB49            Segment part 18 (lshow)
+               calls direct
+           vShow5                  EB64            Segment part 18 (lshow)
+               calls direct
+           vShow6                  EB80            Segment part 18 (lshow)
+               calls direct
+           vShow7                  EBB1            Segment part 18 (lshow)
+               calls direct
+           vShow8                  EBCE            Segment part 18 (lshow)
+               calls direct
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           ?0001                   EAC6 
+           ?0002                   EACB 
+           ?0000                   EAD9 
+           ?0005                   EADB 
+           ?0006                   EAE0 
+           ?0004                   EAF0 
+           ?0009                   EAFD 
+           ?0010                   EB02 
+           ?0008                   EB11 
+           ?0013                   EB16 
+           ?0014                   EB1B 
+           ?0012                   EB2B 
+           ?0017                   EB33 
+           ?0018                   EB38 
+           ?0016                   EB47 
+           ?0021                   EB4F 
+           ?0022                   EB54 
+           ?0020                   EB62 
+           ?0025                   EB6A 
+           ?0026                   EB6F 
+           ?0024                   EB7E 
+           ?0029                   EB86 
+           ?0030                   EB8B 
+           ?0028                   EB99 
+           ?0033                   EB9B 
+           ?0034                   EBA0 
+           ?0032                   EBAF 
+           ?0037                   EBB7 
+           ?0038                   EBBC 
+           ?0036                   EBCC 
+           ?0041                   EBD4 
+           ?0042                   EBD9 
+           ?0040                   EBEB 
+
+    *************************************************************************
+
+  FILE NAME : C:\Program Files\IAR Systems\ew23\78000\lib\cl7801s.r26
+  PROGRAM MODULE, NAME : ?CSTARTUP
+
+  SEGMENTS IN THE MODULE
+  ======================
+INTVEC
+  Common segment, address: E800 - E801 (2 bytes), align: 0
+    -------------------------------------------------------------------------
+CDATA0
+  Relative segment, address: EBEF, align: 0
+    -------------------------------------------------------------------------
+CDATA1
+  Relative segment, address: EBEF, align: 0
+    -------------------------------------------------------------------------
+CDATA2
+  Relative segment, address: EC00, align: 0
+    -------------------------------------------------------------------------
+IDATA0
+  Relative segment, address: FE23, align: 0
+    -------------------------------------------------------------------------
+IDATA1
+  Relative segment, address: FE23, align: 0
+    -------------------------------------------------------------------------
+IDATA2
+  Relative segment, address: FB90, align: 0
+    -------------------------------------------------------------------------
+UDATA0
+  Relative segment, address: FE27, align: 0
+    -------------------------------------------------------------------------
+UDATA1
+  Relative segment, address: FE27, align: 0
+    -------------------------------------------------------------------------
+UDATA2
+  Relative segment, address: FB90, align: 0
+    -------------------------------------------------------------------------
+CCSTR
+  Relative segment, address: EBED, align: 0
+    -------------------------------------------------------------------------
+ECSTR
+  Relative segment, address: FB90, align: 0
+    -------------------------------------------------------------------------
+CSTACK
+  Relative segment, address: FB00, align: 1
+    -------------------------------------------------------------------------
+RCODE
+  Relative segment, address: E880 - E95D (de bytes), align: 0
+  Segment part 21. ROOT.      Intra module refs:   Segment part 0
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?C_STARTUP              E880 
+           @cstart                 E880 
+           @cend                   E894 
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: E95E - E960 (3 bytes), align: 0
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           exit                    E95E 
+           ?C_EXIT                 E95E            ?C_STARTUP (?CSTARTUP)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?lowinit
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: E961 - E964 (4 bytes), align: 0
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __low_level_init        E961            ?C_STARTUP (?CSTARTUP)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LIB_CHECK_L00
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: E965, align: 0
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?CL7801S_3_33_L00       E965 
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?INDRECT_CALL_L06
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: E965 - E966 (2 bytes), align: 0
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?IND_CALL_L06           E965            main (lshow)
+           ?0SIND_CALL_L06         E965 
+           ?0EIND_CALL_L06         E966 
+
+    *************************************************************************
+
+  DEFINED ABSOLUTE ENTRIES
+  PROGRAM MODULE, NAME : ?FILLER_BYTES
+
+  SEGMENTS IN THE MODULE
+  ======================
+INTVEC
+  Common segment, address: E800 - E821 (22 bytes), align: 0
+    -------------------------------------------------------------------------
+?FILL5
+  Relative segment, address: EC00 - F7FF (c00 bytes), align: 0
+    -------------------------------------------------------------------------
+?FILL4
+  Relative segment, address: EBEF - EBEF (1 bytes), align: 0
+    -------------------------------------------------------------------------
+?FILL3
+  Relative segment, address: EBED - EBED (1 bytes), align: 0
+    -------------------------------------------------------------------------
+?FILL2
+  Relative segment, address: E967 - E967 (1 bytes), align: 0
+    -------------------------------------------------------------------------
+?FILL1
+  Relative segment, address: E822 - E87F (5e bytes), align: 0
+  Segment part 0.
+
+
+
+                ****************************************
+                *                                      *
+                *      SEGMENTS IN ADDRESS ORDER       *
+                *                                      *
+                ****************************************
+
+
+SEGMENT              SPACE   START ADDRESS    END ADDRESS      SIZE  TYPE  ALIGN
+=======              =====   =============    ===========      ====  ====  =====
+INTVEC                                E800 - E821                22   com    1
+?FILL1                                E822 - E87F                5E   rel    0
+IFLIST                                   E840                         dse    0
+FLIST                                    E840                         dse    0
+RCODE                                 E880 - E966                E7   rel    0
+?FILL2                                E967 - E967                 1   rel    0
+CODE                                  E968 - EBEC               285   rel    1
+CSTR                                     EBED                         dse    0
+FCODE                                    EBED                         dse    0
+CONST                                    EBED                         dse    0
+CCSTR                                    EBED                         rel    0
+?FILL3                                EBED - EBED                 1   rel    0
+CDATA0                                EBEE - EBEE                 1   rel    1
+CDATA1                                   EBEF                         rel    0
+?FILL4                                EBEF - EBEF                 1   rel    0
+CDATA2                                EBF0 - EBFF                10   rel    1
+?FILL5                                EC00 - F7FF               C00   rel    0
+CSTACK                                FB00 - FB7F                80   rel    1
+NO_INIT                                  FB80                         dse    0
+IDATA2                                FB80 - FB8F                10   rel    1
+TEMP                                     FB90                         dse    0
+ECSTR                                    FB90                         rel    0
+UDATA2                                   FB90                         rel    0
+BITVARS                          FE20.0    -    FE20.2            3   rel    1
+WRKSEG                                   FE21                         dse    0
+IDATA0                                FE22 - FE22                 1   rel    1
+IDATA1                                   FE23                         rel    0
+UDATA0                                FE24 - FE26                 3   rel    1
+UDATA1                                   FE27                         rel    0
+
+                ****************************************
+                *                                      *
+                *        END OF CROSS REFERENCE        *
+                *                                      *
+                ****************************************
+
+  927 bytes of CODE memory (3 169 range fill)
+  148 bytes of DATA memory
+    3 bits  of BIT memory
+
+Errors: none
+Warnings: none
+
