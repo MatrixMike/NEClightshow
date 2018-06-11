@@ -35,6 +35,7 @@ Changes:
 #include <in78000.h>
 #include "DF0066.h"
 #include "defines.h"
+#include "mjhdefines.h"
 
 //-----------------------------------------------------------------------------
 // Function prototyps
