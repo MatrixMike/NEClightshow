@@ -12,26 +12,27 @@
 **               the previous pattern.
 **
 ** ===========================================================================
-** Environment:  Device:         uPD78F0066                                    
-**               Assembler:      A78000         Version 3.30A                     
+** Environment:  Device:         uPD78F0066
+**               Assembler:      A78000         Version 3.30A
 **               C-Compiler:     ICC78000       Version 3.30A
 **               Linker:         XLINK          Version 4.51O
-**               Simulator:      SM78K0         Version 2.10 
+**               Simulator:      SM78K0         Version 2.10
 ** ===========================================================================
 ** By:          NEC Electronics (Europe) GmbH
 **              Oberrather Strasse 4
 **              D-40472 Duesseldorf
 **
 ** ===========================================================================
-Changes:           
+Changes:
 ** ===========================================================================
 */
-
+// mjh change 1 for watching action of build tools
+//Monday, 11 June 2018
 //-----------------------------------------------------------------------------
 // Include files
 //-----------------------------------------------------------------------------
 #include <in78000.h>
-#include "DF0066.h"                       
+#include "DF0066.h"
 #include "defines.h"
 
 //-----------------------------------------------------------------------------
@@ -49,7 +50,7 @@ extern void   vShow5         (void);           // Lightshow 5
 extern void   vShow6         (void);           // Lightshow 6
 extern void   vShow7         (void);           // Lightshow 7
 extern void   vShow8         (void);           // Lightshow 8
-extern void   vHardwareInit  (void);           // Initialization Hardware 
+extern void   vHardwareInit  (void);           // Initialization Hardware
 extern void   vSoftwareInit  (void);           // Initialization measurement variables
 
 //-----------------------------------------------------------------------------
@@ -63,7 +64,7 @@ saddr unsigned char ucLEDs = 0xff;             // LED output value
 void(* pShow[8])(void)={vShow1,vShow2,         // Function-Pointer array
                         vShow3,vShow4,
                         vShow5,vShow6,
-                        vShow7,vShow8 }; 
+                        vShow7,vShow8 };
 
 /* ============================================================================
 **  Module name: vFlashLED
@@ -79,9 +80,9 @@ void vFlashLED(unsigned char Number)
 {
     while(Number>0) {
        ucLEDs=0x00;
-       vWait50(10);                   // Delay of 500 ms 
+       vWait50(10);                   // Delay of 500 ms
        ucLEDs=0xff;
-       vWait50(10);                   // Delay of 500 ms 
+       vWait50(10);                   // Delay of 500 ms
        Number--;
     }
     return;
@@ -90,7 +91,7 @@ void vFlashLED(unsigned char Number)
 **  Module name: vRestartT51
 **
 **  Description:
-**               This module restarts Timer51 
+**               This module restarts Timer51
 **
 **  Operation:
 **               -
@@ -122,7 +123,7 @@ void vWait50(unsigned char Number)
       Number++;
 #endif
   vRestartT2();
-  
+
   while(Number>0) {
         while(bTimer51Flag==0){
         }
@@ -147,7 +148,7 @@ void main( void )
     unsigned char i=0;
     _DI();                             // Disable all interrupts
     vHardwareInit();                   // Peripheral settings
-    vSoftwareInit();                   // Variable Initialization 
+    vSoftwareInit();                   // Variable Initialization
     _EI();                             // Enable all interrupts
     TMC0 = 0x0C;                       // Start Timer 0
     vFlashLED(2);                      // Signal Program start
@@ -158,7 +159,7 @@ void main( void )
             i++;
           else
             i=0;
-       } 
+       }
        if(bKey2Flag==1){               // Key1 pressed ?
           bKey2Flag=0;                 // Reset status flag Key1
           if(i>0)
