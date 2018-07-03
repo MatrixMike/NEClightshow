@@ -64,7 +64,7 @@ bit bKey1Flag;			// Status Key1
 bit bKey2Flag;			// Status Key2
 saddr unsigned char ucLEDs = 0xff;	// LED output value
 
-void (*pShow[8]) (void) =
+void (*pShow[9]) (void) =
 {
   vShow1, vShow2,		// Function-Pointer array
 vShow3, vShow4, vShow5, vShow6, vShow7, vShow8, vShow9};
