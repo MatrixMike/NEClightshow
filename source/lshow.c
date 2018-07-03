@@ -52,6 +52,7 @@ extern void vShow5 (void);	// Lightshow 5
 extern void vShow6 (void);	// Lightshow 6
 extern void vShow7 (void);	// Lightshow 7
 extern void vShow8 (void);	// Lightshow 8
+extern void vShow9 (void);    // Lightshow 9 - new - mjh
 extern void vHardwareInit (void);	// Initialization Hardware
 extern void vSoftwareInit (void);	// Initialization measurement variables
 
@@ -66,7 +67,7 @@ saddr unsigned char ucLEDs = 0xff;	// LED output value
 void (*pShow[8]) (void) =
 {
   vShow1, vShow2,		// Function-Pointer array
-vShow3, vShow4, vShow5, vShow6, vShow7, vShow8};
+vShow3, vShow4, vShow5, vShow6, vShow7, vShow8, vShow9};
 
 /* ============================================================================
 **  Module name: vFlashLED

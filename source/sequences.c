@@ -233,3 +233,25 @@ void vShow8(void)
     return;
 }
 
+/* ============================================================================
+**  Module name: vShow9
+**
+**  Description:
+**               This module defines lightshow number9.
+** added by mjh on Thinkpad R52
+**  Operation:
+**               -
+** ============================================================================
+*/
+#define vShow9forTest 4
+void vShow9(void)
+{
+    unsigned char i;
+    ucLEDs=0xFC;
+    for (i=0;i<vShow9forTest;i++){
+      vWait50(2);                     // Delay of 100 ms 
+      ucLEDs = (ucLEDs << 2) + 0x03;
+    }
+    return;
+}
+
